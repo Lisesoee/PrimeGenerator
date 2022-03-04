@@ -33,7 +33,7 @@ namespace PrimeGenerator2
             sw.Stop();
 
             primesOutput_list.DataSource = primes;
-            resultSyncronousOutput_lbl.Text =  sw.Elapsed.TotalSeconds.ToString();
+            resultSyncronousOutput_lbl.Text = primes.Count() + " primes found in " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -49,9 +49,9 @@ namespace PrimeGenerator2
             // TODO: Make call asyncronous / wrap in async wrapper method
             primes = primeGenerator.GetPrimesParallel(rangeStart, rangeEnd);
             sw.Stop();
-
+            
             primesOutput_list.DataSource = primes;
-            resultParallelOutput_lbl.Text = sw.Elapsed.TotalSeconds.ToString();
+            resultParallelOutput_lbl.Text = primes.Count() + " primes found in " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
 
         }
 

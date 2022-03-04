@@ -14,8 +14,9 @@ namespace PrimeGenerator2
         {
             List<long> primes = new List<long>();
            
-            for (long i = first; i < last; i++)
+            for (long i = first; i <= last; i++)
             {
+                
                 if (isPrimeNumber(i))
                 {
                     primes.Add(i);
@@ -24,7 +25,7 @@ namespace PrimeGenerator2
             }            
             return primes;
 
-            // TODO: fix issue where 2 is not added to the list when given range 1..50
+            // TODO: fix one-off issue where 2 is not added to the list when given range 1..50 (works in the parallel version though)
         }
 
         private bool isPrimeNumber(long number)
@@ -49,22 +50,25 @@ namespace PrimeGenerator2
         public List<long> GetPrimesParallel(long first, long last)
         {
             List<long> primes = new List<long>();
+            Object lockObject = new Object();
 
-            // TODO: Make parallel (needs locking or concurrent collection)
-            
-            for (long i = first; i < last; i++)
+            // TODO: Bent suggestion to other group: consider performance improvement by using ForEach loop + partitioner
+
+            Parallel.For(first, last, i =>
             {
                 if (isPrimeNumber(i))
                 {
-                    primes.Add(i);
+                    // list is shared resource, so we need to protect it with a lock
+                    lock (lockObject)
+                    {
+                        primes.Add(i);
+                    }
                 }
-                i++;
-            }
+            });
 
             // TODO: Make list sorted (as if it was generated sequentially)
 
             return primes;
-        }
-        
+        }        
     }
 }

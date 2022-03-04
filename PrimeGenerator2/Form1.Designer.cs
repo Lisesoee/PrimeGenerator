@@ -107,7 +107,7 @@ namespace PrimeGenerator2
             // primesOutput_list
             // 
             this.primesOutput_list.FormattingEnabled = true;
-            this.primesOutput_list.Location = new System.Drawing.Point(253, 22);
+            this.primesOutput_list.Location = new System.Drawing.Point(463, 22);
             this.primesOutput_list.Name = "primesOutput_list";
             this.primesOutput_list.Size = new System.Drawing.Size(154, 420);
             this.primesOutput_list.TabIndex = 7;
@@ -143,7 +143,7 @@ namespace PrimeGenerator2
             // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(478, 513);
+            this.ClientSize = new System.Drawing.Size(702, 513);
             this.Controls.Add(this.resultParallelOutput_lbl);
             this.Controls.Add(this.resultParallel_lbl);
             this.Controls.Add(this.generatePrimesParallel_btn);
