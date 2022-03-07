@@ -13,19 +13,16 @@ namespace PrimeGenerator2
         public List<long> GetPrimesSequential(long first, long last)
         {
             List<long> primes = new List<long>();
-           
+
             for (long i = first; i <= last; i++)
             {
-                
+
                 if (isPrimeNumber(i))
                 {
                     primes.Add(i);
                 }
-                i++;                
-            }            
+            }
             return primes;
-
-            // TODO: fix one-off issue where 2 is not added to the list when given range 1..50 (works in the parallel version though)
         }
 
         private bool isPrimeNumber(long number)
@@ -41,8 +38,8 @@ namespace PrimeGenerator2
                 if (number % i == 0)
                 {
                     return false;
-                }                    
-            }                
+                }
+            }
 
             return true;
         }
@@ -52,23 +49,41 @@ namespace PrimeGenerator2
             List<long> primes = new List<long>();
             Object lockObject = new Object();
 
-            // TODO: Bent suggestion to other group: consider performance improvement by using ForEach loop + partitioner
-
-            Parallel.For(first, last, i =>
-            {
-                if (isPrimeNumber(i))
+            Parallel.ForEach(
+                Partitioner.Create(first, last),
+                (range) =>
                 {
-                    // list is shared resource, so we need to protect it with a lock
-                    lock (lockObject)
+                    for (long i = range.Item1; i < range.Item2; i++)
                     {
-                        primes.Add(i);
+                        if (isPrimeNumber(i))
+                        {
+                            lock (lockObject)
+                            {
+                                primes.Add(i);
+                            }
+                        }
                     }
-                }
-            });
+                });
 
-            // TODO: Make list sorted (as if it was generated sequentially)
+            primes.Sort();
 
             return primes;
-        }        
+        }
+
+        public Task<List<long>> GetPrimesSequentialAsync(long first, long last)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                return GetPrimesSequential(first, last);
+            });
+        }
+
+        public Task<List<long>> GetPrimesParallelAsync(long first, long last)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                return GetPrimesParallel(first, last);
+            });
+        }
     }
 }

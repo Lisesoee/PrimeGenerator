@@ -16,40 +16,43 @@ namespace PrimeGenerator2
         public Form1()
         {
             InitializeComponent();
-        }        
+        }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private async void button1_Click_1(object sender, EventArgs e)
         {
-           // Sequential
+            // Sequential
+
+            primesOutput_list.DataSource = null;
+            primesOutput_list.Items.Clear();
+
             PrimeGenerator primeGenerator = new PrimeGenerator();
             List<long> primes = new List<long>();
             long rangeStart = long.Parse(rangeStart_input.Text);
             long rangeEnd = long.Parse(rangeEnd_input.Text);
 
-
             Stopwatch sw = Stopwatch.StartNew();
-            // TODO: Make call asyncronous / wrap in async wrapper method
-            primes = primeGenerator.GetPrimesSequential(rangeStart, rangeEnd);
+            primes = await primeGenerator.GetPrimesSequentialAsync(rangeStart, rangeEnd);
             sw.Stop();
 
             primesOutput_list.DataSource = primes;
             resultSyncronousOutput_lbl.Text = primes.Count() + " primes found in " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             // Parallel
 
+            primesOutput_list.DataSource = null;
+            primesOutput_list.Items.Clear();
             PrimeGenerator primeGenerator = new PrimeGenerator();
             List<long> primes = new List<long>();
             long rangeStart = long.Parse(rangeStart_input.Text);
             long rangeEnd = long.Parse(rangeEnd_input.Text);
 
             Stopwatch sw = Stopwatch.StartNew();
-            // TODO: Make call asyncronous / wrap in async wrapper method
-            primes = primeGenerator.GetPrimesParallel(rangeStart, rangeEnd);
+            primes = await primeGenerator.GetPrimesParallelAsync(rangeStart, rangeEnd);
             sw.Stop();
-            
+
             primesOutput_list.DataSource = primes;
             resultParallelOutput_lbl.Text = primes.Count() + " primes found in " + sw.Elapsed.TotalSeconds.ToString() + " seconds";
 
@@ -78,6 +81,6 @@ namespace PrimeGenerator2
 
         }
 
-        
+
     }
 }
